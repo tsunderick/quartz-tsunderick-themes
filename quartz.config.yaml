@@ -289,7 +289,7 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/garciaErick/quartz-tsunderick-themes
+        GitHub: https://github.com/tsunderick/quartz-tsunderick-themes
     layout:
       position: footer
       priority: 50
