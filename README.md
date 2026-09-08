@@ -183,7 +183,7 @@ conflict with base.
 ### Flavor A — own repo, repo root (like 7th-heaven / ashfall)
 
 ```bash
-git clone https://github.com/garciaErick/quartz-tsunderick-themes.git my-site
+git clone https://github.com/tsunderick/quartz-tsunderick-themes.git my-site
 cd my-site
 git remote rename origin base                      # the sync source
 git remote add origin git@github.com:YOU/my-site.git
@@ -238,7 +238,7 @@ the monorepo root is then **structurally untouchable by base** forever:
 
 ```bash
 cd my-monorepo
-git remote add base https://github.com/garciaErick/quartz-tsunderick-themes.git
+git remote add base https://github.com/tsunderick/quartz-tsunderick-themes.git
 git fetch base
 git merge --allow-unrelated-histories -Xsubtree=wiki base/main
 ```

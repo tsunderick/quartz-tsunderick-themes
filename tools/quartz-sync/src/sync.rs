@@ -133,7 +133,7 @@ pub fn run(refspec: &str, prefix: Option<&str>) -> i32 {
     }
     if git_capture(&["remote", "get-url", "base"]).is_err() {
         eprintln!(
-            "quartz-sync sync: no `base` remote — register it with:\n  git remote add base https://github.com/garciaErick/quartz-tsunderick-themes.git"
+            "quartz-sync sync: no `base` remote — register it with:\n  git remote add base https://github.com/tsunderick/quartz-tsunderick-themes.git"
         );
         return 1;
     }
