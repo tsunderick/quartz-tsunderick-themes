@@ -210,26 +210,26 @@ mise exec node@$(cat .node-version) -- npx quartz build --serve
 # serves at http://localhost:8080
 ```
 
-Deploy: connect the repo to a Cloudflare Workers build (root directory `/`) with
+Deploy: connect the repo to a Cloudflare Workers build (root directory `/`).
+Three pieces, two owners — the **dashboard** holds the commands, the **fork**
+owns the config:
 
-```
-git fetch --unshallow && npm ci && npx quartz plugin install && npx quartz build
+| Piece | Lives where | What it does |
+|---|---|---|
+| Build command | CF dashboard | `git fetch --unshallow && npm ci && npx quartz plugin install && npx quartz build` — compiles the site into `public/` |
+| Deploy command | CF dashboard | `npx wrangler versions upload` — runs wrangler after the build |
+| `wrangler.jsonc` | **fork repo root** | tells wrangler the worker name + that it serves `./public` — without it the deploy fails with `Missing entry-point to Worker script or to assets directory` |
+
+Fork setup:
+
+```bash
+cp templates/wrangler.jsonc wrangler.jsonc   # then rename "name" to your CF project name
 ```
 
-and, if the Worker wasn't created through the dashboard with an assets
-directory, commit a fork-owned `wrangler.jsonc`:
-
-```jsonc
-{
-  "name": "your-worker-name",
-  "compatibility_date": "2026-08-21",
-  "assets": {
-    "directory": "./public",
-    "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page",
-  },
-}
-```
+The template's comments are load-bearing: **the trailing commas are required**
+(`.prettierrc` sets `trailingComma: "all"`, which prettier enforces on
+`.jsonc` too — removing them fails `npm run check` / engine-ci). Run
+`npm run check` before pushing; a red check on a fork is almost always this.
 
 ### Flavor B — subdirectory of a monorepo (like family.tsunderick.space/docs)
 

@@ -1,0 +1,25 @@
+{
+  // Fork-owned Workers deploy config — cp this file to your repo ROOT, then
+  // rename "name" to match your Cloudflare project (worker) name.
+  //
+  // Fork-owned = this path does not exist in base, so engine syncs never
+  // conflict with it. The deploy step (`npx wrangler versions upload`) reads
+  // it to learn the worker name + that this worker serves static assets.
+  // Missing this file = "Missing entry-point to Worker script or to assets
+  // directory" — that error means "no wrangler.jsonc", not a dashboard issue.
+  //
+  // ⚠ DO NOT "clean up" the trailing commas: the engine's .prettierrc sets
+  //   `trailingComma: "all"`, which prettier enforces on .jsonc too.
+  //   Removing them fails `npm run check` (engine-ci) on every push.
+  //
+  // assets.directory: ./public (Flavor A — quartz build output at root).
+  // Flavor B subpath forks (grafted under a monorepo subdir): ./dist —
+  // the subpath layout their build script produces.
+  "name": "your-worker-name",
+  "compatibility_date": "2026-08-21",
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+}
