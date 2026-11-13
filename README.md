@@ -358,6 +358,36 @@ cargo fmt --check && cargo clippy --all-targets -- --deny warnings
 cargo test
 ```
 
+### TypeScript 7 and `moduleResolution: bundler`
+
+The base (and every fork) runs TypeScript 7 — the native Go port. TS7
+**removed** `moduleResolution: node10` (`"node"`) outright; we run
+`"bundler"`, the only mode that fits this tree:
+
+- `node16`/`nodenext` demand explicit extensions on relative imports —
+  the tree has 300+ extensionless ones
+- everything is esbuild/tsx-bundled, which is precisely what `bundler`
+  models (valid since TS 5.0, so forks still on 5.9 stay green)
+
+Leaving node10 means package.json `exports` maps are respected
+strictly now. Two consequences already baked in:
+
+- subpath imports must be exported — `remark-parse/lib` isn't (v11's
+  exports is a bare `"./index.js"` string); `parse.ts` imports `Root`
+  from `mdast` instead, where remark-parse's own d.ts sources it
+- packages whose `exports` lack a `types` entry lose their typings —
+  micromorph ships real declarations but doesn't export them, so
+  tsconfig `paths` shims `"micromorph"` to its `index.d.ts`
+
+When adding a dependency, prefer ones whose `exports` expose types
+(`"types"` condition or `typesVersions`); otherwise add a `paths` shim
+here.
+
+Dependabot note: the npm group `production-dependencies` uses
+`patterns: ["*"]`, which sweeps **dev**Dependencies too — that's how
+forks received `typescript@7` ahead of this migration (the
+docs.ashfallsoftware.com CI failure this addresses).
+
 ## Troubleshooting
 
 ### `sharp: Attempting to build from source via node-gyp`
