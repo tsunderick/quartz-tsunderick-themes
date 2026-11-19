@@ -24,7 +24,7 @@
   },
   "engines": {
     "npm": ">=10.9.2",
-    "node": ">=22"
+    "node": ">=22.22"
   },
   "keywords": [
     "site generator",
